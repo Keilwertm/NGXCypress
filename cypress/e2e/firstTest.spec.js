@@ -136,7 +136,7 @@ describe('First test suite', () => {
             })
         })
 
-        it.only('checkboxes', () => {
+        it('checkboxes', () => {
             cy.visit('/')
             cy.contains('Modal & Overlays').click()
             cy.contains('Toastr').click()
@@ -146,4 +146,86 @@ describe('First test suite', () => {
 
         })
 
-    })
+        it('Date picker', () => {
+
+            function selectDayFromCurrent(day){
+                let date = new Date()
+                date.setDate(date.getDate() + day)
+                let futureDay = date.getDate()
+                let futureMonth = date.toLocaleDateString('en-US', {month: 'short'})
+                let futureYear = date.getFullYear()
+                let dateToAssert = `${futureMonth} ${futureDay}, ${futureYear}`;
+                cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then( dateAttribute => {
+                    if(!dateAttribute.includes(futureMonth) || !dateAttribute.includes(futureYear)){
+                        cy.get('[data-name="chevron-right"]').click()
+                        selectDayFromCurrent(day)
+                    } else {
+                        cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
+                    } 
+                })
+                return dateToAssert
+            }
+            cy.visit('/')
+            cy.contains('Forms').click()
+            cy.contains('Datepicker').click()
+            cy.contains('nb-card', 'Common Datepicker').find('input').then( input => {
+                cy.wrap(input).click()
+                const dateToAssert  = selectDayFromCurrent(5)
+                cy.wrap(input).invoke('prop', 'value').should('contain', dateToAssert)
+                cy.wrap(input).should('have.value', dateToAssert)
+        })
+     })
+
+     it('Lists and dropdowns', () => {
+        cy.visit('/')
+
+        //1
+        cy.get('nav nb-select').click()
+        cy.get('.options-list').contains('Dark').click()
+        cy.get('nav nb-select').should('contain', 'Dark')
+
+        // looping selection
+        cy.get('nav nb-select').then( dropDown => {
+            cy.wrap(dropDown).click()
+            cy.get('.options-list nb-option').each( (listItem, index) => {
+                const itemText = listItem.text().trim()
+                cy.wrap(listItem).click()
+                cy.wrap(dropDown).should('contain', itemText)
+                if(index < 3){
+                    cy.wrap(dropDown).click()
+                }    
+            })
+        })
+     })
+
+     it('Web Tables', () => {
+        
+        cy.visit('/')
+            cy.contains('Tables & Data').click()
+            cy.contains('Smart Table').click()
+
+            // How to get the row of the table by text
+            cy.get('tbody').contains('tr', 'Larry').then( tableRow => {
+                cy.wrap(tableRow).find('.nb-edit').click()
+                cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('35')
+                cy.wrap(tableRow).find('.nb-checkmark').click()
+                // finding by index of the tables, no unique selector, sixth collumn in the tablerow
+                cy.wrap(tableRow).find('td').eq(6).should('contain', '35')
+            })
+
+            // Get row by index (adding a new user makes more rows)
+
+            cy.get('thead').find('.nb-plus').click()
+            cy.get('thead').find('tr').eq(2).then(tableRow => {
+                cy.wrap(tableRow).find('[placeholder="First Name"]').type('John')
+                cy.wrap(tableRow).find('[placeholder="Last Name"]').type('Smith')
+                cy.wrap(tableRow).find('.nb-checkmark').click()
+            })
+
+            // method first is the first row or collumn
+            cy.get('tbody tr').first().find('td').then( tableColumns => {
+                cy.wrap(tableColumns).eq(2).should('contain', 'John')
+                cy.wrap(tableColumns).eq(3).should('contain', 'Smith')
+            })
+     })
+ })
