@@ -122,7 +122,6 @@ describe('First test suite', () => {
                 expect(property).to.equal('test@test.com')
             })
         })
-
         it('radio buttons', () => {
             cy.visit('/')
             cy.contains('Forms').click()
@@ -135,7 +134,10 @@ describe('First test suite', () => {
                 cy.wrap(radioButtons).eq(2).should('be.disabled')
             })
         })
+<<<<<<< HEAD
 
+=======
+>>>>>>> 731966e5077c6f35930ddf003018944a2f1f97e4
         it('checkboxes', () => {
             cy.visit('/')
             cy.contains('Modal & Overlays').click()
@@ -143,11 +145,14 @@ describe('First test suite', () => {
 
             cy.get('[type="checkbox"]').check({force: true})
             cy.get('[type="checkbox"]').eq(0).click({force: true})
-
         })
-
         it('Date picker', () => {
 
+<<<<<<< HEAD
+        it('Date picker', () => {
+
+=======
+>>>>>>> 731966e5077c6f35930ddf003018944a2f1f97e4
             function selectDayFromCurrent(day){
                 let date = new Date()
                 date.setDate(date.getDate() + day)
@@ -176,7 +181,11 @@ describe('First test suite', () => {
         })
      })
 
+<<<<<<< HEAD
      it('Lists and dropdowns', () => {
+=======
+     it.only('Lists and dropdowns', () => {
+>>>>>>> 731966e5077c6f35930ddf003018944a2f1f97e4
         cy.visit('/')
 
         //1
@@ -197,6 +206,7 @@ describe('First test suite', () => {
             })
         })
      })
+<<<<<<< HEAD
 
      it('Web Tables', () => {
         
@@ -228,4 +238,6 @@ describe('First test suite', () => {
                 cy.wrap(tableColumns).eq(3).should('contain', 'Smith')
             })
      })
+=======
+>>>>>>> 731966e5077c6f35930ddf003018944a2f1f97e4
  })
