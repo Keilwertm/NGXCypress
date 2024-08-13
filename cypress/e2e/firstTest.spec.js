@@ -142,7 +142,6 @@ describe('First test suite', () => {
             cy.get('[type="checkbox"]').check({force: true})
             cy.get('[type="checkbox"]').eq(0).click({force: true})
         })
-        it('Date picker', () => {
 
         it('Date picker', () => {
 
@@ -161,6 +160,8 @@ describe('First test suite', () => {
                         cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
                     } 
                 })
+                    
+                
                 return dateToAssert
             }
             cy.visit('/')
@@ -172,8 +173,9 @@ describe('First test suite', () => {
                 cy.wrap(input).invoke('prop', 'value').should('contain', dateToAssert)
                 cy.wrap(input).should('have.value', dateToAssert)
         })
-     })
 
+    })
+        
      it('Lists and dropdowns', () => {
         cy.visit('/')
 
@@ -194,7 +196,6 @@ describe('First test suite', () => {
                 }    
             })
         })
-     })
 
      it('Web Tables', () => {
         
@@ -225,7 +226,13 @@ describe('First test suite', () => {
                 cy.wrap(tableColumns).eq(2).should('contain', 'John')
                 cy.wrap(tableColumns).eq(3).should('contain', 'Smith')
             })
-     })
- })
 
+            // get each row for validation 
+            cy.get('thead [plaholder="Age"]').clear().type(20)
+            cy.get('tbody tr').each( tableRow => {
+                cy.wrap(tableRow).find('tb').eq(6).should('contain', '20')
+            })  
+    })
+
+     })
 })
